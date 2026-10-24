@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RailConnect | Train Booking</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #123c69;
+    --secondary: #1d70a2;
+    --accent: #ff9f1c;
+    --background: #f3f6fb;
+    --text: #172b4d;
+    --white: #ffffff;
+    --border: #dce4ef;
+    --success: #16834a;
+    --danger: #d62828;
+    --muted: #64748b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100%;
+    font-family: 'Inter', Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+body {
+    min-height: 100vh;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.navbar {
+    min-height: 72px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 5%;
+    gap: 20px;
+    box-shadow: 0 3px 12px rgba(18,60,105,0.15);
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: 800;
+    white-space: nowrap;
+    letter-spacing: -0.8px;
+}
+
+.logo span {
+    color: var(--accent);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.nav-links button {
+    background: transparent;
+    color: white;
+    border: none;
+    padding: 11px 13px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.nav-links button:hover,
+.nav-links button.active {
+    background: var(--secondary);
+}
+
+main {
+    max-width: 1500px;
+    margin: auto;
+    padding: 22px 4%;
+    min-height: calc(100vh - 72px);
+}
+
+.page-section {
+    display: none;
+    width: 100%;
+}
+
+.page-section.active {
+    display: block;
+}
+
+.home-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* HOME BANNER */
+
+.hero {
+    min-height: 175px;
+    border-radius: 15px;
+    padding: 28px 32px;
+    color: white;
+    background: linear-gradient(120deg, #123c69, #1d70a2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    width: 210px;
+    height: 210px;
+    border-radius: 50%;
+    border: 30px solid rgba(255,255,255,0.08);
+    right: 8%;
+    top: -85px;
+}
+
+.hero h1 {
+    font-size: clamp(25px, 3vw, 36px);
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -0.7px;
+    position: relative;
+    z-index: 1;
+}
+
+.hero p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #e8f2ff;
+    max-width: 650px;
+    position: relative;
+    z-index: 1;
+}
+
+/* COMPACT SEARCH PANEL */
+
+.search-panel {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 19px 22px;
+    box-shadow: 0 4px 15px rgba(18,60,105,0.05);
+}
+
+.search-panel h2 {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.search-subtitle {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 16px;
+}
+
+.search-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.form-group label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #34445c;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    min-width: 0;
+    padding: 10px 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    outline: none;
+    background: white;
+    color: var(--text);
+    font-size: 12px;
+    transition: 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(29,112,162,0.1);
+}
+
+.btn {
+    border: none;
+    border-radius: 7px;
+    padding: 10px 15px;
+    font-size: 12px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--secondary);
+}
+
+.btn-accent {
+    background: var(--accent);
+    color: #172b4d;
+}
+
+.btn-accent:hover {
+    background: #ffb13b;
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* MESSAGES */
+
+.message {
+    padding: 11px 13px;
+    border-radius: 8px;
+    margin-top: 12px;
+    font-size: 12px;
+    display: none;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.message.show {
+    display: block;
+}
+
+.message.error {
+    background: #fff0f0;
+    color: #b42318;
+}
+
+.message.success {
+    background: #eaf8ef;
+    color: #137333;
+}
+
+.message.info {
+    background: #edf5ff;
+    color: #123c69;
+}
+
+/* AVAILABLE TRAINS */
+
+.results-panel {
+    display: none;
+    width: 100%;
+    margin-top: 19px;
+    padding-top: 17px;
+    border-top: 1px solid var(--border);
+}
+
+.results-panel.show-results {
+    display: block;
+}
+
+.results-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 13px;
+    flex-wrap: wrap;
+}
+
+.results-heading h3 {
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.result-count {
+    font-size: 11px;
+    color: var(--muted);
+    background: #edf5ff;
+    padding: 6px 10px;
+    border-radius: 20px;
+}
+
+/* IMPORTANT: compact two-column train layout */
+
+#resultList {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: start;
+}
+
+.train-card {
+    border: 1px solid var(--border);
+    background: #fbfdff;
+    border-radius: 10px;
+    padding: 14px;
+    min-width: 0;
+    transition: 0.2s;
+}
+
+.train-card:hover {
+    border-color: #9ab9d9;
+    box-shadow: 0 4px 12px rgba(18,60,105,0.08);
+    transform: translateY(-2px);
+}
+
+.train-card h3 {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 5px;
+    overflow-wrap: anywhere;
+}
+
+.train-number {
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 12px;
+}
+
+.train-route {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.route-item small {
+    display: block;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-size: 10px;
+}
+
+.route-item strong {
+    display: block;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.train-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    border-top: 1px solid var(--border);
+    padding-top: 11px;
+    flex-wrap: wrap;
+}
+
+.fare {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.seats {
+    color: var(--success);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.train-info .btn {
+    padding: 9px 12px;
+    font-size: 11px;
+}
+
+.no-results,
+.empty-state {
+    background: #f5f8fc;
+    color: #52647a;
+    padding: 16px;
+    border-radius: 9px;
+    line-height: 1.7;
+    font-size: 12px;
+    grid-column: 1 / -1;
+}
+
+/* OTHER PAGES */
+
+.section-card {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    background: white;
+    padding: 23px;
+    border-radius: 13px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 15px rgba(18,60,105,0.05);
+}
+
+.section-card h2 {
+    color: var(--primary);
+    font-size: 21px;
+    font-weight: 800;
+    margin-bottom: 17px;
+}
+
+.section-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.section-form .btn {
+    width: 100%;
+}
+
+/* MY BOOKINGS: SMALL CARDS IN TWO COLUMNS */
+
+.data-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 12px;
+}
+
+.booking-card {
+    background: #f8fbff;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 13px 14px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.booking-card h3 {
+    margin-bottom: 8px;
+    color: var(--primary);
+    font-size: 14px;
+}
+
+.booking-card p {
+    font-size: 11px;
+    line-height: 1.7;
+    margin: 2px 0;
+    overflow-wrap: anywhere;
+}
+
+.booking-card .btn {
+    margin-top: 9px;
+    padding: 8px 11px;
+    font-size: 11px;
+}
+
+.status-badge {
+    display: inline-block;
+    background: #eaf8ef;
+    color: var(--success);
+    border-radius: 5px;
+    padding: 4px 7px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* PNR DETAILS CARD */
+
+#pnrResult {
+    margin-top: 15px;
+}
+
+#pnrResult .booking-card {
+    width: 100%;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .navbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .search-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #resultList,
+    .data-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 550px) {
+    main {
+        padding: 14px 4%;
+    }
+
+    .navbar {
+        padding: 14px 4%;
+    }
+
+    .nav-links {
+        gap: 4px;
+    }
+
+    .nav-links button {
+        padding: 9px;
+        font-size: 10px;
+    }
+
+    .hero {
+        padding: 22px;
+        min-height: 155px;
+    }
+
+    .search-panel,
+    .section-card {
+        padding: 16px;
+    }
+
+    .search-form,
+    .section-form,
+    #resultList,
+    .data-list {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .train-info {
+        align-items: center;
+    }
+}
+</style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Rail<span>Connect</span></div>
+
+    <nav class="nav-links">
+        <button type="button" class="active" data-page="homePage">Home</button>
+        <button type="button" data-page="bookingPage">Booking</button>
+        <button type="button" data-page="pnrPage">PNR Status</button>
+        <button type="button" data-page="bookingsPage">My Bookings</button>
+        <button type="button" data-page="cancelPage">Cancel Booking</button>
+    </nav>
+</header>
+
+<main>
+
+<!-- HOME PAGE -->
+
+<section id="homePage" class="page-section active">
+    <div class="home-layout">
+
+        <div class="hero">
+            <h1>Find Your Perfect Train</h1>
+            <p>Search trains, check availability and book your journey with RailConnect.</p>
+        </div>
+
+        <div class="search-panel">
+            <h2>Search Trains</h2>
+
+            <p class="search-subtitle">
+                Select your source, destination and journey date.
+            </p>
+
+            <form id="searchForm" class="search-form">
+
+                <div class="form-group">
+                    <label for="source">FROM</label>
+                    <select id="source" required>
+                        <option value="">Loading stations...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="destination">TO</label>
+                    <select id="destination" required>
+                        <option value="">Loading stations...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="journeyDate">JOURNEY DATE</label>
+                    <input id="journeyDate" type="date" required>
+                </div>
+
+                <button class="btn btn-primary" id="searchButton" type="submit">
+                    Search Trains
+                </button>
+
+            </form>
+
+            <div id="searchMessage" class="message" role="status"></div>
+
+            <div id="results" class="results-panel">
+
+                <div class="results-heading">
+                    <h3>Available Trains</h3>
+                    <span id="resultCount" class="result-count"></span>
+                </div>
+
+                <div id="resultList"></div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- BOOKING PAGE -->
+
+<section id="bookingPage" class="page-section">
+    <div class="section-card">
+
+        <h2>Book Your Ticket</h2>
+
+        <form id="bookingForm" class="section-form">
+
+            <div class="form-group">
+                <label for="bookingTrainId">Train ID / Number</label>
+                <input id="bookingTrainId" type="text"
+                       placeholder="Enter train ID or number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="passengerName">Passenger Name</label>
+                <input id="passengerName" type="text"
+                       placeholder="Enter passenger name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="passengerAge">Age</label>
+                <input id="passengerAge" type="number"
+                       min="1" max="120" required>
+            </div>
+
+            <div class="form-group">
+                <label for="passengerGender">Gender</label>
+                <select id="passengerGender" required>
+                    <option value="">Select gender</option>
+                    <option>Female</option>
+                    <option>Male</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bookingSource">From</label>
+                <input id="bookingSource" type="text" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bookingDestination">To</label>
+                <input id="bookingDestination" type="text" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bookingDate">Journey Date</label>
+                <input id="bookingDate" type="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="passengerCount">Number of Passengers</label>
+                <input id="passengerCount" type="number"
+                       min="1" max="6" value="1" required>
+            </div>
+
+            <div class="full-width">
+                <button class="btn btn-primary" type="submit">
+                    Confirm Booking
+                </button>
+            </div>
+
+        </form>
+
+        <div id="bookingMessage" class="message" role="status"></div>
+
+    </div>
+</section>
+
+<!-- PNR STATUS PAGE -->
+
+<section id="pnrPage" class="page-section">
+    <div class="section-card">
+
+        <h2>Check PNR Status</h2>
+
+        <form id="pnrForm" class="section-form">
+
+            <div class="form-group full-width">
+                <label for="pnrInput">PNR Number</label>
+                <input id="pnrInput" type="text"
+                       placeholder="Enter your PNR number" required>
+            </div>
+
+            <div class="full-width">
+                <button class="btn btn-primary" type="submit">
+                    Check Status
+                </button>
+            </div>
+
+        </form>
+
+        <div id="pnrMessage" class="message" role="status"></div>
+        <div id="pnrResult" class="data-list"></div>
+
+    </div>
+</section>
+
+<!-- MY BOOKINGS PAGE -->
+
+<section id="bookingsPage" class="page-section">
+    <div class="section-card">
+
+        <h2>My Bookings</h2>
+
+        <button id="refreshBookings" class="btn btn-primary" type="button">
+            Refresh Bookings
+        </button>
+
+        <div id="bookingsMessage" class="message" role="status"></div>
+
+        <div id="bookingsList" class="data-list" style="margin-top:15px;"></div>
+
+    </div>
+</section>
+
+<!-- CANCEL BOOKING PAGE -->
+
+<section id="cancelPage" class="page-section">
+    <div class="section-card">
+
+        <h2>Cancel Booking</h2>
+
+        <form id="cancelForm" class="section-form">
+
+            <div class="form-group full-width">
+                <label for="cancelPnr">PNR Number</label>
+                <input id="cancelPnr" type="text"
+                       placeholder="Enter PNR number" required>
+            </div>
+
+            <div class="full-width">
+                <button class="btn btn-danger" type="submit">
+                    Cancel Ticket
+                </button>
+            </div>
+
+        </form>
+
+        <div id="cancelMessage" class="message" role="status"></div>
+
+    </div>
+</section>
+<script>
+const API_BASE = "/api";
+
+const pageButtons = document.querySelectorAll("[data-page]");
+const pages = document.querySelectorAll(".page-section");
+
+function showSection(pageId) {
+    pages.forEach(page => {
+        page.classList.toggle("active", page.id === pageId);
+    });
+
+    pageButtons.forEach(button => {
+        button.classList.toggle("active", button.dataset.page === pageId);
+    });
+
+    if (pageId === "bookingsPage") {
+        loadBookings();
+    }
+}
+
+pageButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        showSection(button.dataset.page);
+    });
+});
+
+function showMessage(elementId, message, type = "info") {
+    const element = document.getElementById(elementId);
+    element.textContent = message;
+    element.className = `message show ${type}`;
+}
+
+function clearMessage(elementId) {
+    const element = document.getElementById(elementId);
+    element.textContent = "";
+    element.className = "message";
+}
+
+function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
+
+function getTrainName(train) {
+    return train.trainName || train.name || "Train";
+}
+
+function getTrainNumber(train) {
+    return train.trainNumber ?? train.number ?? train.id ?? train._id ?? "";
+}
+
+function getTrainSource(train) {
+    return train.source || train.from || "";
+}
+
+function getTrainDestination(train) {
+    return train.destination || train.to || "";
+}
+
+function getTrainSeats(train) {
+    return train.availableSeats ?? train.seatsAvailable ?? train.seats ?? 0;
+}
+
+function getTrainFare(train) {
+    return Number(train.fare ?? train.price ?? 0);
+}
+
+function normalizeTrainList(data) {
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data?.trains)) return data.trains;
+    if (Array.isArray(data?.content)) return data.content;
+    if (Array.isArray(data?.data)) return data.data;
+    return [];
+}
+
+function normalizeStation(value) {
+    return String(value || "").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+async function apiRequest(path, options = {}) {
+    const response = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+        }
+    });
+
+    const text = await response.text();
+    let data = null;
+
+    if (text) {
+        try {
+            data = JSON.parse(text);
+        } catch {
+            data = text;
+        }
+    }
+
+    if (!response.ok) {
+        const message = typeof data === "string"
+            ? data
+            : data?.message || data?.error ||
+              `Request failed (${response.status})`;
+
+        throw new Error(message);
+    }
+
+    return data;
+}
+
+/* STATION DROPDOWNS */
+
+async function loadStationDropdowns() {
+    const sourceSelect = document.getElementById("source");
+    const destinationSelect = document.getElementById("destination");
+
+    try {
+        const data = await apiRequest("/trains");
+        const trains = normalizeTrainList(data);
+
+        const stations = new Set();
+
+        trains.forEach(train => {
+            const source = getTrainSource(train).trim();
+            const destination = getTrainDestination(train).trim();
+
+            if (source) stations.add(source);
+            if (destination) stations.add(destination);
+        });
+
+        const sortedStations = [...stations].sort((a, b) =>
+            a.localeCompare(b)
+        );
+
+        sourceSelect.innerHTML = '<option value="">Select Source</option>';
+        destinationSelect.innerHTML =
+            '<option value="">Select Destination</option>';
+
+        sortedStations.forEach(station => {
+            sourceSelect.add(new Option(station, station));
+            destinationSelect.add(new Option(station, station));
+        });
+
+        if (sortedStations.length === 0) {
+            sourceSelect.innerHTML =
+                '<option value="">No stations available</option>';
+
+            destinationSelect.innerHTML =
+                '<option value="">No stations available</option>';
+
+            showMessage(
+                "searchMessage",
+                "No stations found. Please check your train database.",
+                "error"
+            );
+        }
+    } catch (error) {
+        sourceSelect.innerHTML =
+            '<option value="">Unable to load stations</option>';
+
+        destinationSelect.innerHTML =
+            '<option value="">Unable to load stations</option>';
+
+        showMessage(
+            "searchMessage",
+            `Could not load stations: ${error.message}`,
+            "error"
+        );
+    }
+}
+
+/* PREVENT SAME SOURCE AND DESTINATION */
+
+document.getElementById("source").addEventListener("change", () => {
+    const source = document.getElementById("source").value;
+    const destinationSelect = document.getElementById("destination");
+
+    [...destinationSelect.options].forEach(option => {
+        option.disabled =
+            option.value !== "" &&
+            normalizeStation(option.value) === normalizeStation(source);
+    });
+
+    if (normalizeStation(source) ===
+        normalizeStation(destinationSelect.value)) {
+        destinationSelect.value = "";
+    }
+});
+
+/* SEARCH TRAINS */
+
+async function searchTrains(source, destination) {
+    const query = new URLSearchParams({
+        source,
+        destination
+    });
+
+    try {
+        const data = await apiRequest(
+            `/trains/search?${query.toString()}`
+        );
+
+        const trains = normalizeTrainList(data);
+
+        if (trains.length > 0) {
+            return trains;
+        }
+    } catch (error) {
+        console.warn("Search endpoint failed:", error.message);
+    }
+
+    const allData = await apiRequest("/trains");
+    const allTrains = normalizeTrainList(allData);
+
+    const wantedSource = normalizeStation(source);
+    const wantedDestination = normalizeStation(destination);
+
+    return allTrains.filter(train =>
+        normalizeStation(getTrainSource(train)) === wantedSource &&
+        normalizeStation(getTrainDestination(train)) === wantedDestination
+    );
+}
+
+function showResultsPanel() {
+    document.getElementById("results").classList.add("show-results");
+}
+
+function hideResultsPanel() {
+    document.getElementById("results").classList.remove("show-results");
+    document.getElementById("resultList").innerHTML = "";
+    document.getElementById("resultCount").textContent = "";
+}
+
+/* DISPLAY COMPACT TRAIN CARDS */
+
+function displayResults(trains) {
+    const resultList = document.getElementById("resultList");
+    const resultCount = document.getElementById("resultCount");
+
+    resultList.innerHTML = "";
+
+    if (!trains.length) {
+        resultCount.textContent = "0 trains";
+
+        resultList.innerHTML = `
+            <div class="no-results">
+                <strong>No trains found for this route.</strong><br>
+                Please choose another source and destination.
+            </div>
+        `;
+        return;
+    }
+
+    resultCount.textContent =
+        `${trains.length} train${trains.length === 1 ? "" : "s"} found`;
+
+    trains.forEach(train => {
+        const number = getTrainNumber(train);
+        const name = getTrainName(train);
+        const source = getTrainSource(train);
+        const destination = getTrainDestination(train);
+        const seats = getTrainSeats(train);
+        const fare = getTrainFare(train);
+
+        const card = document.createElement("article");
+        card.className = "train-card";
+
+        card.innerHTML = `
+            <h3>${escapeHtml(name)}</h3>
+
+            <div class="train-number">
+                Train No: ${escapeHtml(number)}
+            </div>
+
+            <div class="train-route">
+                <div class="route-item">
+                    <small>FROM</small>
+                    <strong>${escapeHtml(source)}</strong>
+                    <small>${escapeHtml(train.departureTime || "--")}</small>
+                </div>
+
+                <div class="route-item">
+                    <small>TO</small>
+                    <strong>${escapeHtml(destination)}</strong>
+                    <small>${escapeHtml(train.arrivalTime || "--")}</small>
+                </div>
+            </div>
+
+            <div class="train-info">
+                <div>
+                    <div class="fare">
+                        ₹${Number.isFinite(fare) ? fare : 0}
+                    </div>
+                    <div class="seats">
+                        ${escapeHtml(seats)} seats available
+                    </div>
+                </div>
+
+                <button class="btn btn-accent book-train-button" type="button">
+                    Book Now
+                </button>
+            </div>
+        `;
+
+        card.querySelector(".book-train-button")
+            .addEventListener("click", () => {
+                document.getElementById("bookingTrainId").value = number;
+                document.getElementById("bookingSource").value = source;
+                document.getElementById("bookingDestination").value =
+                    destination;
+
+                document.getElementById("bookingDate").value =
+                    document.getElementById("journeyDate").value;
+
+                showSection("bookingPage");
+            });
+
+        resultList.appendChild(card);
+    });
+}
+
+/* SEARCH FORM */
+
+document.getElementById("searchForm").addEventListener(
+    "submit",
+    async event => {
+        event.preventDefault();
+
+        const source = document.getElementById("source").value.trim();
+        const destination =
+            document.getElementById("destination").value.trim();
+        const date = document.getElementById("journeyDate").value;
+        const searchButton = document.getElementById("searchButton");
+
+        clearMessage("searchMessage");
+
+        if (!source || !destination || !date) {
+            showMessage(
+                "searchMessage",
+                "Please fill in all search fields.",
+                "error"
+            );
+            return;
+        }
+
+        if (normalizeStation(source) === normalizeStation(destination)) {
+            showMessage(
+                "searchMessage",
+                "Source and destination cannot be the same.",
+                "error"
+            );
+            return;
+        }
+
+        showResultsPanel();
+
+        document.getElementById("resultList").innerHTML =
+            '<div class="empty-state">Searching available trains...</div>';
+
+        document.getElementById("resultCount").textContent = "";
+
+        searchButton.disabled = true;
+        searchButton.textContent = "Searching...";
+
+        try {
+            const trains = await searchTrains(source, destination);
+            displayResults(trains);
+        } catch (error) {
+            document.getElementById("resultList").innerHTML = "";
+
+            showMessage(
+                "searchMessage",
+                `Could not load trains. Check your backend. ${error.message}`,
+                "error"
+            );
+        } finally {
+            searchButton.disabled = false;
+            searchButton.textContent = "Search Trains";
+        }
+    }
+);
+
+/* BOOKING FORM */
+
+document.getElementById("bookingForm").addEventListener(
+    "submit",
+    async event => {
+        event.preventDefault();
+        clearMessage("bookingMessage");
+
+        const payload = {
+            trainId: document.getElementById("bookingTrainId").value.trim(),
+            passengerName:
+                document.getElementById("passengerName").value.trim(),
+            age: Number(document.getElementById("passengerAge").value),
+            gender: document.getElementById("passengerGender").value,
+            source: document.getElementById("bookingSource").value.trim(),
+            destination:
+                document.getElementById("bookingDestination").value.trim(),
+            journeyDate: document.getElementById("bookingDate").value,
+            numberOfPassengers:
+                Number(document.getElementById("passengerCount").value)
+        };
+
+        if (normalizeStation(payload.source) ===
+            normalizeStation(payload.destination)) {
+            showMessage(
+                "bookingMessage",
+                "Source and destination cannot be the same.",
+                "error"
+            );
+            return;
+        }
+
+        try {
+            const result = await apiRequest("/bookings", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            const pnr = result?.pnr ??
+                        result?.pnrNumber ??
+                        result?.data?.pnr;
+
+            showMessage(
+                "bookingMessage",
+                pnr
+                    ? `Booking successful! Your PNR is ${pnr}. Please save it.`
+                    : "Booking request completed. Please check your booking details.",
+                "success"
+            );
+
+            if (pnr) {
+                document.getElementById("pnrInput").value = pnr;
+                document.getElementById("cancelPnr").value = pnr;
+            }
+
+            document.getElementById("bookingForm").reset();
+            document.getElementById("bookingDate").value = localToday;
+        } catch (error) {
+            showMessage("bookingMessage", error.message, "error");
+        }
+    }
+);
+
+/* PNR STATUS */
+
+function displayBookingDetails(container, booking) {
+    const entries = Object.entries(booking || {}).filter(([key, value]) => {
+        return value !== null &&
+               value !== undefined &&
+               typeof value !== "object" &&
+               !["password"].includes(key.toLowerCase());
+    });
+
+    if (!entries.length) {
+        container.innerHTML =
+            '<div class="empty-state">No booking details found.</div>';
+        return;
+    }
+
+    const card = document.createElement("div");
+    card.className = "booking-card";
+
+    card.innerHTML = entries.map(([key, value]) => `
+        <p>
+            <strong>${escapeHtml(
+                key.replace(/([A-Z])/g, " $1")
+                   .replace(/^./, character => character.toUpperCase())
+            )}:</strong>
+            ${escapeHtml(value)}
+        </p>
+    `).join("");
+
+    container.innerHTML = "";
+    container.appendChild(card);
+}
+
+document.getElementById("pnrForm").addEventListener(
+    "submit",
+    async event => {
+        event.preventDefault();
+        clearMessage("pnrMessage");
+
+        const pnr = document.getElementById("pnrInput").value.trim();
+        const resultContainer = document.getElementById("pnrResult");
+
+        resultContainer.innerHTML =
+            '<div class="empty-state">Checking PNR...</div>';
+
+        try {
+            const booking = await apiRequest(
+                `/bookings/pnr/${encodeURIComponent(pnr)}`
+            );
+
+            const details = booking?.data ?? booking?.booking ?? booking;
+
+            displayBookingDetails(resultContainer, details);
+
+            showMessage(
+                "pnrMessage",
+                "PNR details loaded successfully.",
+                "success"
+            );
+        } catch (error) {
+            resultContainer.innerHTML = "";
+            showMessage("pnrMessage", error.message, "error");
+        }
+    }
+);
+
+/* MY BOOKINGS: COMPACT TWO-COLUMN CARDS */
+
+async function loadBookings() {
+    const list = document.getElementById("bookingsList");
+
+    clearMessage("bookingsMessage");
+
+    list.innerHTML =
+        '<div class="empty-state">Loading bookings...</div>';
+
+    try {
+        const data = await apiRequest("/bookings");
+
+        const bookings = Array.isArray(data)
+            ? data
+            : Array.isArray(data?.bookings)
+                ? data.bookings
+                : Array.isArray(data?.data)
+                    ? data.data
+                    : [];
+
+        list.innerHTML = "";
+
+        if (!bookings.length) {
+            list.innerHTML =
+                '<div class="empty-state">No bookings found.</div>';
+            return;
+        }
+
+        bookings.forEach(booking => {
+            const card = document.createElement("div");
+            card.className = "booking-card";
+
+            const pnr = booking.pnr ?? booking.pnrNumber ?? "";
+            const name = booking.passengerName ?? booking.name ?? "Passenger";
+
+            const trainName = booking.trainName ??
+                              booking.trainNumber ??
+                              booking.trainId ??
+                              "Train";
+
+            const status = booking.status ?? "Booked";
+
+            card.innerHTML = `
+                <h3>${escapeHtml(name)}</h3>
+
+                <p><strong>PNR:</strong> ${escapeHtml(pnr)}</p>
+
+                <p><strong>Train:</strong> ${escapeHtml(trainName)}</p>
+
+                <p>
+                    <strong>Route:</strong>
+                    ${escapeHtml(booking.source ?? "")}
+                    → ${escapeHtml(booking.destination ?? "")}
+                </p>
+
+                <p>
+                    <strong>Date:</strong>
+                    ${escapeHtml(booking.journeyDate ?? booking.date ?? "")}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    <span class="status-badge">${escapeHtml(status)}</span>
+                </p>
+
+                <button class="btn btn-danger cancel-this-booking" type="button">
+                    Cancel Booking
+                </button>
+            `;
+
+            card.querySelector(".cancel-this-booking")
+                .addEventListener("click", () => {
+                    if (!pnr) {
+                        showMessage(
+                            "bookingsMessage",
+                            "PNR not available for this booking.",
+                            "error"
+                        );
+                        return;
+                    }
+
+                    document.getElementById("cancelPnr").value = pnr;
+                    showSection("cancelPage");
+                });
+
+            list.appendChild(card);
+        });
+    } catch (error) {
+        list.innerHTML = "";
+
+        showMessage(
+            "bookingsMessage",
+            `Could not load bookings: ${error.message}`,
+            "error"
+        );
+    }
+}
+
+document.getElementById("refreshBookings")
+    .addEventListener("click", loadBookings);
+
+/* CANCEL BOOKING */
+
+document.getElementById("cancelForm").addEventListener(
+    "submit",
+    async event => {
+        event.preventDefault();
+        clearMessage("cancelMessage");
+
+        const pnr = document.getElementById("cancelPnr").value.trim();
+
+        if (!pnr) {
+            showMessage(
+                "cancelMessage",
+                "Please enter a PNR number.",
+                "error"
+            );
+            return;
+        }
+
+        if (!confirm(`Are you sure you want to cancel booking ${pnr}?`)) {
+            return;
+        }
+
+        try {
+            const result = await apiRequest(
+                `/bookings/cancel/${encodeURIComponent(pnr)}`,
+                { method: "PUT" }
+            );
+
+            const message = typeof result === "string"
+                ? result
+                : result?.message || "Booking cancellation request completed.";
+
+            showMessage("cancelMessage", message, "success");
+        } catch (error) {
+            showMessage("cancelMessage", error.message, "error");
+        }
+    }
+);
+
+/* INITIAL SETUP */
+
+const today = new Date();
+
+const localToday = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0")
+].join("-");
+
+document.getElementById("journeyDate").min = localToday;
+document.getElementById("bookingDate").min = localToday;
+
+document.getElementById("journeyDate").value = localToday;
+document.getElementById("bookingDate").value = localToday;
+
+/* Load dropdowns only; do not display all trains on initial page load. */
+
+loadStationDropdowns();
+</script>
+
+</body>
+</html>
